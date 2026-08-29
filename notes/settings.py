@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
 
         "rest_framework",
-        "api"
+        "api",
+        'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -51,7 +53,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
+
+CORS_ALLOW_ALL_ORIGINS= True #development time
+ CORS_ALLOWED_ORIGINS =[ 
+    "http://localhost:5173", # Dev 
+    "https://notes-crud-w5ki.vercel.app", # Production 
+    ]
 
 ROOT_URLCONF = 'notes.urls'
 
@@ -76,12 +85,26 @@ WSGI_APPLICATION = 'notes.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+import os
+ import dj_database_url
+ from dotenv import load_dotenv
+  load_dotenv()
+   ALLOWED_HOSTS=["*"]
+    DATABASES={ "default": dj_database_url.config( 
+        default=os.getenv("DATABASE_URL"),
+         conn_max_age=600,
+          ssl_require=True # Render PostgreSQL requires SSL
+           ) 
+        }
+
+        ALLOWED_HOSTS=["*"]
 
 
 # Password validation
